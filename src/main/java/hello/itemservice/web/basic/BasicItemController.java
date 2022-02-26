@@ -93,14 +93,29 @@ public class BasicItemController {
     /**
      * @ModelAttribute 는 생략가능
      */
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV4(Item item,
                             Model model){
 
         itemRepository.save(item);
 
 //        model.addAttribute("item", item);
+        // 기존에 사용하던 뷰 템플릿으로 보여주는 것이기때문에 url은 /basic/items/add 그대로이다.
         return "basic/item";
+    }
+
+    /**
+     * @ModelAttribute 는 생략가능
+     */
+    @PostMapping("/add")
+    public String addItemV5(Item item,
+                            Model model){
+
+        itemRepository.save(item);
+
+//        model.addAttribute("item", item);
+        //redirect로 해야 새로고침을 해도 post방식이 동작하지 않는다
+        return "redirect:/basic/items/" + item.getId();
     }
 
     @GetMapping("/{itemId}/edit")
