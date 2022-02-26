@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -107,7 +108,7 @@ public class BasicItemController {
     /**
      * @ModelAttribute 는 생략가능
      */
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV5(Item item,
                             Model model){
 
@@ -116,6 +117,23 @@ public class BasicItemController {
 //        model.addAttribute("item", item);
         //redirect로 해야 새로고침을 해도 post방식이 동작하지 않는다
         return "redirect:/basic/items/" + item.getId();
+    }
+
+    /**
+     * @ModelAttribute 는 생략가능
+     */
+    @PostMapping("/add")
+    public String addItemV6(Item item, RedirectAttributes redirectAttributes){
+
+        Item savedItem = itemRepository.save(item);
+
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        //redirectAttributes.addAttribute("itemId", savedItem.getId()); 여기에서의 itemId가 치환된다
+        // url 상에 없으면 요청 파라미터로 바뀐다 /basic/items/3?status=True
+        return "redirect:/basic/items/{itemId}";
+
     }
 
     @GetMapping("/{itemId}/edit")
